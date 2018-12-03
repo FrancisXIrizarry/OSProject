@@ -1,0 +1,26 @@
+void startSystem(){
+
+   priority_queue<ProcessCB, vector<ProcessCB>, Comparison> readyQueue;
+   long int ramSize;
+   short int hardDisks;
+   cout << "How much ram memory is on the computer?" << endl;
+   cin >> ramSize;
+   cout << "How many hard disks does the simulated computer have? " << endl;
+   cin >> hardDisks;
+   cout << endl;
+   cin.clear();
+   cin.ignore(numeric_limits<streamsize>::max(), '\n');
+   while(true){
+     string input;
+     int priorityV;
+     long int memory_size;
+     cout << "> ";
+     getline(cin, input);
+     if(input.at(0) == 'Q') break;
+     checkInput(input, readyQueue);
+   }
+   while(!readyQueue.empty()){
+      cout << readyQueue.top().get_ValID() << " \t <--ID and Priority -> \t" << readyQueue.top().get_Priority() << endl;
+      readyQueue.pop();
+   }
+}
