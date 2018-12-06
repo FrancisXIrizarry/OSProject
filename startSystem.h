@@ -8,9 +8,11 @@
 #include <queue> 
 #include <vector>
 #include <limits>
+#include <map>
+#include <list>
 #include "ProcessCB.h"
 #include "hardDisk.h"
-#include <map>
+
 using namespace std;
 
 vector<string> splitInput(string inputStr);
@@ -74,6 +76,36 @@ public:
   void funcSR();
   void funcSI();
   void funcSM();
+  bool checkMemory(int pid, int memV){
+      if(memoryList.empty()){
+	  memoryObj newObj;
+	  newObj.PID = pid;//When t empty memory 
+	  newObj.beginMem = 0;
+	  newObj.endMem = memV;
+	  memoryList.push_back(newObj);
+	  return true;
+      }
+      else{
+	 for (std::list<memoryObj>::iterator it = memoryList.begin(); it != memoryList.end(); ++it){
+	    if(it->beginMem - memV > 0){//50000 - 0, 30000 -> 50000[30000] - 0 -> 20000
+		memoryObj newObj;
+		newObj.PID = pid;//When t empty memory 
+		newObj.beginMem = it->beginMem - memV;
+		newObj.endMem = memV;
+		memoryList.insert(it,newObj);
+	    }
+	    else if(memV - it->beginMem > 0){ //[40000]20000[1000] -- 30000
+	      
+	    }
+	   // cout << it->PID << "\t" << it->beginMem << "\t" << it->endMem << endl; Ignore this for now
+	  }
+      }
+  }
+  struct memoryObj{
+      int PID;
+      unsigned long int beginMem;
+      unsigned long int endMem;
+  };
 private:
   long int ramSize;
   short int hardDisks;
@@ -81,6 +113,8 @@ private:
   vector<hardDisk> hardDrives;
   CPU cpu;
   map<int, ProcessCB> processTable;
+  list<memoryObj> memoryList;
+  unsigned long int memoryMax = 4000000000000; //memoryMax - memV then memoryMax + memV;
   //InputOutput hardDriveAccess;
 };
 

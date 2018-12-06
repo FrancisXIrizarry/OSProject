@@ -88,7 +88,7 @@ private:
   bool noCompetition;
   string pFile;
   bool lastP = false;
-  ProcessCB hardDriveP;
+  ProcessCB hardDriveP;//Swap pair of ProcessCB String to int string. We only need to keep track of processID which we can call processTable
   bool processINHDD;
   queue<pair<ProcessCB, string>> InputOutput_Q;
 };

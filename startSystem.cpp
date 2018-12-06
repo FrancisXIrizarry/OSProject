@@ -140,14 +140,19 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	if(hardDriveV < 0 || hardDriveV >= hardDrives.size()){
 	  cerr << "That hard disk drive does not exist. Reissue the command with an existing HDD" << endl;
 	}
-	else if(readyQ.empty()){
+	else if(readyQ.empty() && cpu.emptyCPU()){
 	  cerr << "No process to add " << endl;
 	}
 	else{
 	    hardDrives.at(hardDriveV).addProcess(cpu.getProcess(), fileName);
-	    cpu.setProcess(processTable.find(readyQ.top().first)->second);
+	    if(readyQ.empty()){
+	      cpu.terminateP();
+	    }
+	    else{
+	    cpu.terminateP(processTable.find(readyQ.top().first)->second);
 	    //processTable.erase(readyQ.top().first); -------------------
 	    readyQ.pop();	
+	    }	
 	}
 	}
 	else{
