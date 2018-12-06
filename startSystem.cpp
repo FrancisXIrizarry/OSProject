@@ -13,6 +13,7 @@ vector<string> splitInput(string inputStr){
 
 void startSystem::preemptiveCheck()
 {
+    //cout << " preemptiveCheck " << endl;
     if(cpu.emptyCPU()){
 	cpu.setProcess(processTable.find((readyQueue.top().first))->second);
 	readyQueue.pop();
@@ -31,6 +32,7 @@ void startSystem::preemptiveCheck()
 
 void startSystem::funcSR()
 {
+  //cout << " funcSR() " << " \t " << !cpu.emptyCPU() << endl;
   if(!cpu.emptyCPU()){  
   cout << "* ID:" <<  cpu.getProcess().get_ValID() << " P:" << cpu.getProcess().get_Priority() << endl;
   displayReadyQ(readyQueue);
@@ -94,7 +96,9 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	priV >> priorityV;
 	memV >> memory_size;
 	
-	//if memory can fit, then add (todo)
+	if(checkMemory(PID_Auto, memory_size)){
+	  
+	}
 	ProcessCB newProcess(PID_Auto, priorityV);
 	processTable.insert(pair<int, ProcessCB>(PID_Auto, newProcess));
 	readyQ.push(make_pair<int, int>(int(PID_Auto), newProcess.get_Priority()));
@@ -144,7 +148,7 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	  cerr << "No process to add " << endl;
 	}
 	else{
-	    hardDrives.at(hardDriveV).addProcess(cpu.getProcess(), fileName);
+	    hardDrives.at(hardDriveV).addProcess(cpu.getProcess().get_ValID(), fileName);
 	    if(readyQ.empty()){
 	      cpu.terminateP();
 	    }
@@ -152,7 +156,7 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	    cpu.terminateP(processTable.find(readyQ.top().first)->second);
 	    //processTable.erase(readyQ.top().first); -------------------
 	    readyQ.pop();	
-	    }	
+	    }
 	}
 	}
 	else{
@@ -168,10 +172,11 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	 cerr << "No process to terminate in I/O" << endl; 
 	}
 	else{
-	ProcessCB temp = hardDrives.at(hardDriveV).finishP();
-	readyQ.push(make_pair<int, int>(temp.get_ValID(), temp.get_Priority()));
-	cout << "ReadyQ em " << readyQ.empty() << " \t " << readyQ.top().first << endl;
-	processTable.insert(pair<int, ProcessCB>(temp.get_ValID(), temp));	
+	int processID = hardDrives.at(hardDriveV).finishP();
+	int processP = (processTable.find(processID)->second).get_Priority();
+	readyQ.push(make_pair(processID, processP)); //
+	//cout << "ReadyQ em " << readyQ.empty() << " \t " << readyQ.top().first << endl;
+	//processTable.insert(pair<int, ProcessCB>(processID, processTable.find(processID)->second));	// aaaaaaa
 	}
     }
     else if(inputStr.at(0) == 'H'){
@@ -186,6 +191,7 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	    cerr << "Nothing to display, queue and cpu empty" << endl;
 	}
 	else{
+	    //cout << " 	funcSR(); 	" << endl;
 	funcSR();
 	}
       }
@@ -216,9 +222,11 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 
 void startSystem::displayReadyQ(priority_queue<pair<int,int>,vector<pair<int,int>>,CompareDist> readyQCopy)
 {
+   // cout << " displayReadyQ " << endl;
       while(!readyQCopy.empty()){
       //cout << readyQCopy.top().first << " Nani " << endl;
       cout << "ID:" << readyQCopy.top().first << " P:" <<  readyQCopy.top().second << endl;
       readyQCopy.pop(); //processTable.erase(key)
       }
+      
 }

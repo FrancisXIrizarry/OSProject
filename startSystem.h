@@ -69,8 +69,8 @@ public:
   void addToCPU(ProcessCB cpuP){
     cpu.setProcess(cpuP);
   }
-  ProcessCB getCPUP(){
-      return cpu.getProcess();
+  int getCPUP(){
+      return cpu.getProcess().get_ValID(); //return cpu.getProcess.get_validID(), change function to int
   }
   void displayReadyQ(priority_queue<pair<int,int>,vector<pair<int,int>>,CompareDist> );
   void funcSR();

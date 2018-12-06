@@ -12,15 +12,15 @@ public:
 	 processINHDD = false;
 	 noCompetition = true;
     }
-    void addProcess(ProcessCB newP, string fileN){
+    void addProcess(int newP, string fileN){
        if(processINHDD == false){
-	  hardDriveP = newP;
+	  hardDriveP = newP;//change newp to int and pass the value of it 
 	  processINHDD = true;
 	  pFile = fileN;
 	  noCompetition = false;
        }
        else{
-	InputOutput_Q.push(make_pair(newP, fileN));
+	InputOutput_Q.push(make_pair(newP, fileN));//change newp to int
        }
        
     }
@@ -30,21 +30,21 @@ public:
     bool isHDDEmpty(){
        return noCompetition;
     }
-    ProcessCB getHDDP(){
+    int getHDDP(){
 	return hardDriveP;
     }
     string getFile(){
 	return pFile;
     }
     void getIOQ(){
-	queue<pair<ProcessCB, string>> copyOfQueue = InputOutput_Q;
-	if((hardDriveP.get_ValID() == 0 && getFile() == "") || noCompetition){
+	queue<pair<int, string>> copyOfQueue = InputOutput_Q;
+	if((getHDDP() == 0 && getFile() == "") || noCompetition){
 	  cerr << "Nothing in hard disk drive nor in queue" << endl;
 	}
 	else{
-	  cout << "HDP*: " << hardDriveP.get_ValID() << "\tpFile: " << getFile() << endl;
+	  cout << "HDP*: " << hardDriveP << "\tpFile: " << getFile() << endl;
 	  while(!copyOfQueue.empty()){
-	    cout << "HDP: " << copyOfQueue.front().first.get_ValID() << "\tpFile: " << copyOfQueue.front().second << endl;
+	    cout << "HDP: " << copyOfQueue.front().first << "\tpFile: " << copyOfQueue.front().second << endl;
 	    copyOfQueue.pop();
 	  }
 	}
@@ -60,9 +60,9 @@ public:
 	  noCompetition = false;
 	}
     }
-    ProcessCB finishP(){
+    int finishP(){
         //cout << hardDriveP.get_ValID() << "wot" << endl;
-        ProcessCB tempC = hardDriveP;
+        int tempC = hardDriveP;
 	if(!isQEmpty()){
 	 assignHDP();
 	 return tempC;
@@ -73,7 +73,7 @@ public:
 	 return tempC;
 	}
 	else{
-	  ProcessCB nullObVj;
+	  int nullObVj = NULL;
 	  hardDriveP = nullObVj;
 	  pFile = "";
 	  cerr << "No processes on drive" << endl;
@@ -88,9 +88,9 @@ private:
   bool noCompetition;
   string pFile;
   bool lastP = false;
-  ProcessCB hardDriveP;//Swap pair of ProcessCB String to int string. We only need to keep track of processID which we can call processTable
+  int hardDriveP;//Swap pair of ProcessCB String to int string. We only need to keep track of processID which we can call processTable
   bool processINHDD;
-  queue<pair<ProcessCB, string>> InputOutput_Q;
+  queue<pair<int, string>> InputOutput_Q;
 };
 
 
