@@ -72,6 +72,10 @@ public:
   int getCPUP(){
       return cpu.getProcess().get_ValID(); //return cpu.getProcess.get_validID(), change function to int
   }
+  bool isDigit( char c ) 
+  {
+   return ( '0' <= c && c <= '9' );
+  }
   void displayReadyQ(priority_queue<pair<int,int>,vector<pair<int,int>>,CompareDist> );
   void funcSR();
   void funcSI();
@@ -85,19 +89,76 @@ public:
 	  memoryList.push_back(newObj);
 	  return true;
       }
+      else if(memoryList.size() == 1){
+
+	  int endCheck = (memoryMax-memoryList.front().endMem);
+	  int frontCheck = memoryList.front().beginMem;
+	  endCheck >= memV ? 1 : endCheck = -1;
+	  frontCheck >= memV ? 1 : frontCheck = -1;
+	  if(endCheck >= frontCheck && frontCheck != -1){ 
+	    memoryObj newObj;
+	    newObj.PID = pid;//When t empty memory 
+	    newObj.beginMem = 0;
+	    newObj.endMem = memV;
+	    memoryList.push_front(newObj);
+	  }
+	  else if(frontCheck > endCheck && endCheck != -1){
+	      memoryObj newObj;
+	      newObj.PID = pid;//When t empty memory 
+	      newObj.beginMem = memoryList.front().endMem;
+	      newObj.endMem = newObj.beginMem + memV;
+	      memoryList.push_front(newObj);
+	  }
+	  else{
+	    return false;
+	  }
+	  return true;
+      }
       else{
+	 int bestCurV = 0;
+	 memoryObj copyOfObj;
 	 for (std::list<memoryObj>::iterator it = memoryList.begin(); it != memoryList.end(); ++it){
-	    if(it->beginMem - memV > 0){//50000 - 0, 30000 -> 50000[30000] - 0 -> 20000
-		memoryObj newObj;
-		newObj.PID = pid;//When t empty memory 
-		newObj.beginMem = it->beginMem - memV;
-		newObj.endMem = memV;
-		memoryList.insert(it,newObj);
+	    /*f(copy1 == nullptr){
+	        
+		if(it->beginMem == 0){
+		  list<memoryObj>::iterator copy = ++it;
+		    int endV = it->endMem;
+		    if(copy != nullptr){
+		      if(endV + memV <= copy->beginMem){
+			 copyOfObj = copy;
+			 bestCurV = copy->beginMem - endV;
+		      }
+		      else{
+			 if(endV + memV <= memoryMax){
+			   memoryObj newObj;
+			   newObj.PID = pid;//When t empty memory 
+			   newObj.beginMem = memoryList.front().endMem;
+			   newObj.endMem = newObj.beginMem + memV;
+			   memoryList.push_front(newObj);
+			 }
+		      }
+		    }
+		}
+		else{
+		   list<memoryObj>::iterator copy = ++it;
+		   int currPrevV = 0;
+		   int currNextV = 0;
+		  if(it->beginMem - memV >= 0){
+		      currPrevV = it->beginMem;
+		  }
+		  if(it->endMem + memV <= copy->endMem){
+		      currNextV = copy->endMem - it->endMem;//check values between
+		  }
+		  int tempBest;
+		  currPrevV <= currNextV ? tempBest = currPrevV : tempBest = currNextV;
+		    
+		}
+
 	    }
-	    else if(memV - it->beginMem > 0){ //[40000]20000[1000] -- 30000
+	    else{
 	      
-	    }
-	   // cout << it->PID << "\t" << it->beginMem << "\t" << it->endMem << endl; Ignore this for now
+	    }*/
+	    
 	  }
       }
   }
@@ -118,7 +179,16 @@ private:
   //InputOutput hardDriveAccess;
 };
 
-
+    /*int endCheck = (memoryMax-memoryList.it.endMem);
+	    int frontCheck = memoryList.it
+	    .beginMem;
+	    if(it->beginMem - memV > 0){//50000 - 0, 30000 -> 50000[30000] - 0 -> 20000
+		
+	    }
+	    else if(memV - it->beginMem > 0){ //[40000]20000[1000] -- 30000
+	      
+	    }
+	   // cout << it->PID << "\t" << it->beginMem << "\t" << it->endMem << endl; Ignore this for now*/
 
 
 #endif

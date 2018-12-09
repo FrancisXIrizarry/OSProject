@@ -137,6 +137,10 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	string fileName;
 	vector<string> result = splitInput(inputStr);
 	if(result.size() == 3){
+	  if(!isDigit(result.at(1).at(0))){
+	    cerr << "Provided character for hard drive value, try again" << endl;
+	    return;
+	  }
 	stringstream hardDriveVSS(result.at(1));
 	stringstream fileNameSS(result.at(2));
 	hardDriveVSS >> hardDriveV;
@@ -166,17 +170,33 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
     else if(inputStr.at(0) == 'D'){
 	int hardDriveV;
 	vector<string> result = splitInput(inputStr);
-	stringstream hardDriveVSS(result.at(1));
+	stringstream hardDriveVSS;
+	try{
+	 hardDriveVSS << result.at(1);
+	}
+	catch(...){
+	cerr << "Not enough input" << endl;
+	return;
+	}
+	if(result.size() >= 3){
+	    cerr << "Too much input" << endl;
+	    return;
+	}
 	hardDriveVSS >> hardDriveV;
-	if(hardDrives.at(hardDriveV).isHDDEmpty()){
-	 cerr << "No process to terminate in I/O" << endl; 
+	if(hardDriveV >= hardDrives.size()){
+	    cerr << "This hard-drive does not exist" << endl;
 	}
 	else{
-	int processID = hardDrives.at(hardDriveV).finishP();
-	int processP = (processTable.find(processID)->second).get_Priority();
-	readyQ.push(make_pair(processID, processP)); //
-	//cout << "ReadyQ em " << readyQ.empty() << " \t " << readyQ.top().first << endl;
-	//processTable.insert(pair<int, ProcessCB>(processID, processTable.find(processID)->second));	// aaaaaaa
+	  if(hardDrives.at(hardDriveV).isHDDEmpty()){
+	    cerr << "No process to terminate in I/O" << endl; 
+	  }
+	  else{
+	    int processID = hardDrives.at(hardDriveV).finishP();
+	    int processP = (processTable.find(processID)->second).get_Priority();
+	    readyQ.push(make_pair(processID, processP)); //
+	    //cout << "ReadyQ em " << readyQ.empty() << " \t " << readyQ.top().first << endl;
+	    //processTable.insert(pair<int, ProcessCB>(processID, processTable.find(processID)->second));	// aaaaaaa
+	  }
 	}
     }
     else if(inputStr.at(0) == 'H'){
@@ -186,6 +206,18 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
     }
     else if(inputStr.at(0) == 'S'){
       vector<string> result = splitInput(inputStr);
+      string charV;
+      try{
+	charV = result.at(1);
+      }
+      catch(...){
+	cerr << "Too too little variables required, tried again" << endl;
+	return;
+      }
+      if(result.size() >= 3){
+	cerr << "Too many values, try again" << endl;
+	return;
+      }
       if(result.at(1) == "r"){
 	if(readyQ.empty() && cpu.emptyCPU()){
 	    cerr << "Nothing to display, queue and cpu empty" << endl;
