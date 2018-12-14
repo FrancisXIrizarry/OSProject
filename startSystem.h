@@ -15,6 +15,10 @@
 
 using namespace std;
 
+
+typedef unsigned long int longInt;
+
+
 vector<string> splitInput(string inputStr);
 
 class CompareDist
@@ -80,92 +84,123 @@ public:
   void funcSR();
   void funcSI();
   void funcSM();
-  bool checkMemory(int pid, int memV){
-      if(memoryList.empty()){
-	  memoryObj newObj;
-	  newObj.PID = pid;//When t empty memory 
-	  newObj.beginMem = 0;
-	  newObj.endMem = memV;
-	  memoryList.push_back(newObj);
-	  return true;
-      }
-      else if(memoryList.size() == 1){
-
-	  int endCheck = (memoryMax-memoryList.front().endMem);
-	  int frontCheck = memoryList.front().beginMem;
-	  endCheck >= memV ? 1 : endCheck = -1;
-	  frontCheck >= memV ? 1 : frontCheck = -1;
-	  if(endCheck >= frontCheck && frontCheck != -1){ 
-	    memoryObj newObj;
-	    newObj.PID = pid;//When t empty memory 
-	    newObj.beginMem = 0;
-	    newObj.endMem = memV;
-	    memoryList.push_front(newObj);
-	  }
-	  else if(frontCheck > endCheck && endCheck != -1){
-	      memoryObj newObj;
-	      newObj.PID = pid;//When t empty memory 
-	      newObj.beginMem = memoryList.front().endMem;
-	      newObj.endMem = newObj.beginMem + memV;
-	      memoryList.push_front(newObj);
+  bool addProcessToMemory(int pid, longInt memV){
+     if(memV > memoryMax && memV != 0){
+        cerr << "Too high/equal to 0. Cannot be in ram" << endl;
+	return false;
+     }
+     
+     if(ram.empty()){
+       memoryObj newObj(pid, 0, memV-1);
+       ram.push_back(newObj);
+     }
+     else{
+     
+     
+     enum side { left, right};
+     longInt bMem = 0;
+     longInt eMem = 0;
+     int loc = 0;
+     longInt currSpace = 0;
+     longInt permSpace = 0;
+     side currSide = left;
+     for(int pos = 0; pos <= ram.size(); pos++){
+        memoryObj *tempObjB = nullptr;
+	memoryObj *tempObjE = nullptr;
+	try{
+	    tempObjB = &ram.at(pos-1);
+	} catch (std::out_of_range& err) {
+	  // oh dear god
+	}
+	try{
+	    tempObjE = &ram.at(pos+1);
+	} catch (std::out_of_range& err) {
+	  // oh dear god
+	}
+	longInt currDis1 = 0;
+	longInt currDis2 = 0;
+	bool fail1 = false;
+	bool fail2 = false;
+	if(tempObjB == nullptr){
+	  currDis1 = ram.at(pos).beginMem;
+	  if(currDis1 >= memV){
+	      currDis1 = currDis1;
 	  }
 	  else{
-	    return false;
+	      fail1 = true;
 	  }
-	  return true;
-      }
-      else{
-	 int bestCurV = 0;
-	 memoryObj copyOfObj;
-	 for (std::list<memoryObj>::iterator it = memoryList.begin(); it != memoryList.end(); ++it){
-	    /*f(copy1 == nullptr){
-	        
-		if(it->beginMem == 0){
-		  list<memoryObj>::iterator copy = ++it;
-		    int endV = it->endMem;
-		    if(copy != nullptr){
-		      if(endV + memV <= copy->beginMem){
-			 copyOfObj = copy;
-			 bestCurV = copy->beginMem - endV;
-		      }
-		      else{
-			 if(endV + memV <= memoryMax){
-			   memoryObj newObj;
-			   newObj.PID = pid;//When t empty memory 
-			   newObj.beginMem = memoryList.front().endMem;
-			   newObj.endMem = newObj.beginMem + memV;
-			   memoryList.push_front(newObj);
-			 }
-		      }
-		    }
-		}
-		else{
-		   list<memoryObj>::iterator copy = ++it;
-		   int currPrevV = 0;
-		   int currNextV = 0;
-		  if(it->beginMem - memV >= 0){
-		      currPrevV = it->beginMem;
-		  }
-		  if(it->endMem + memV <= copy->endMem){
-		      currNextV = copy->endMem - it->endMem;//check values between
-		  }
-		  int tempBest;
-		  currPrevV <= currNextV ? tempBest = currPrevV : tempBest = currNextV;
-		    
-		}
-
+	}
+	else{
+	    if(ram.at(pos).beginMem - tempObjB->endMem >= memV){
+	        currDis1 = ram.at(pos).beginMem - tempObjB->endMem; //pos-1
 	    }
 	    else{
-	      
-	    }*/
-	    
+	      fail1 = true;
+	    }
+	}
+	if(tempObjE == nullptr){
+	  currDis2 = ram.at(pos).endMem;
+	  if(currDis2 + memV <= memoryMax){
+	      currDis2 = memoryMax-currDis2;
 	  }
+	  else{
+	      fail2 = true;
+	  }
+	}
+	else{
+	    if(tempObjB->beginMem - ram.at(pos).endMem >= memV){
+	        currDis2 = tempObjB->beginMem - ram.at(pos).endMem;
+	    }
+	    else{
+	      fail2 = true;
+	    }
+	}
+	if(fail1 == true && fail2 == true){
+	    continue;
+	}
+	else if(fail1 == true && fail2 == false){
+	    if(currSpace >= currDis2){
+	      currSpace = currDis2; 
+	      loc = pos;
+	      currSide = right;
+	    }
+	}
+	else if(fail1 = false && fail2 == true){
+	   if(currSpace >= currDis1){
+	      currSpace = currDis1;
+	      loc = pos;
+	      currSide = left;
+	   }
+	}
+	else{
+	   side tempSide = left;
+	   int better;
+	   currDis1 <= currDis2 ? better = currDis1,tempSide = left: better = currDis2,tempSide = right;
+	   if(currSpace >= better){
+	      currSpace = better;
+	      loc = pos;
+	      currSide = tempSide;
+	   } 
+	}
+	
+	
+	
+	
+	
+	
       }
+      //End else
+     }
+     
   }
   struct memoryObj{
       int PID;
-      unsigned long int beginMem;
-      unsigned long int endMem;
+      longInt beginMem;
+      longInt endMem;
+      memoryObj() = default;
+      memoryObj(int ID, longInt bM, longInt eM) : PID(ID), beginMem(bM), endMem(eM){
+	
+      }
   };
 private:
   long int ramSize;
@@ -174,8 +209,9 @@ private:
   vector<hardDisk> hardDrives;
   CPU cpu;
   map<int, ProcessCB> processTable;
+  vector<memoryObj> ram;
   list<memoryObj> memoryList;
-  unsigned long int memoryMax = 4000000000000; //memoryMax - memV then memoryMax + memV;
+  unsigned long int memoryMax = 4000000000; //memoryMax - memV then memoryMax + memV;
   //InputOutput hardDriveAccess;
 };
 

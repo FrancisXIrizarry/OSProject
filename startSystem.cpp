@@ -96,7 +96,7 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	priV >> priorityV;
 	memV >> memory_size;
 	
-	if(checkMemory(PID_Auto, memory_size)){
+	if(addProcessToMemory(PID_Auto, memory_size)){
 	  
 	}
 	ProcessCB newProcess(PID_Auto, priorityV);
@@ -231,6 +231,9 @@ void startSystem::checkInput(string inputStr, priority_queue<pair<int,int>,vecto
 	funcSI();
       }
       else if(result.at(1) == "m"){
+	 for(int pos = 0; pos < ram.size(); pos++){
+	    cout << ram.at(pos).PID << " <- ID, Begin Mem: \t" << ram.at(pos).beginMem << " \t REE \t" << ram.at(pos).endMem << endl;
+	 }
 	//funcSM();
       }
     }
