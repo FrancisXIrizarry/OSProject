@@ -109,8 +109,8 @@ class startSystem {
             longInt currSpace = memoryMax;
             side currSide = fail;
             for (int pos = 0; pos < ram.size(); pos++) {
-                memoryObj * tempObjB = nullptr;
-                memoryObj * tempObjE = nullptr;
+                memoryObj * tempObjB = NULL;
+                memoryObj * tempObjE = NULL;
                 //cout << "Before huh" << endl;
                 int tempP = pos - 1;
                 //cout << tempP << endl;
@@ -130,7 +130,7 @@ class startSystem {
                 bool fail1 = false;
                 bool fail2 = false;
 
-                if (tempObjB == nullptr) {
+                if (tempObjB == NULL) {
 
                     currDis1 = ram.at(pos).beginMem;
 
@@ -139,7 +139,7 @@ class startSystem {
                     } else {
                         fail1 = true;
                     }
-                    // cout << " tempObjB == nullptr " << endl;
+                    // cout << " tempObjB == NULL " << endl;
                 } else {
                     if (ram.at(pos).beginMem - tempObjB -> endMem > memV) {
                         currDis1 = ram.at(pos).beginMem - tempObjB -> endMem; //pos-1
@@ -147,8 +147,8 @@ class startSystem {
                         fail1 = true;
                     }
                 }
-                if (tempObjE == nullptr) {
-                    //cout << " tempObjE == nullptr) " << endl;
+                if (tempObjE == NULL) {
+                    //cout << " tempObjE == NULL) " << endl;
                     currDis2 = ram.at(pos).endMem;
                     //cout << "Reeee???" << endl;
                     if (currDis2 + memV <= memoryMax) {
@@ -157,7 +157,7 @@ class startSystem {
                         fail2 = true;
                     }
                 } else {
-                    //cout << " Not nullptr " << endl;
+                    //cout << " Not NULL " << endl;
                     // cout << (*tempObjB).beginMem << endl;
                     //cout << tempObjE->beginMem << "\t" << ram.at(pos).endMem << endl;
                     if (tempObjE -> beginMem - ram.at(pos).endMem > memV) {

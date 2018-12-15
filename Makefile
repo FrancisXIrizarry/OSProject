@@ -8,10 +8,10 @@
 # To remove object files and the executable, type 
 #     make cleanall
 #
-# Written by FrancisIrizarry. Operating System Project
+# Written by Stewart Weiss for CSci 335, Spring 2018, Project 3
 
 CXX       := /usr/bin/g++
-CXXFLAGS  += -Wall -g -std=c++11 -lm
+CXXFLAGS  += -Wall -g -lm
 SRCS = $(wildcard *.cpp)
 OBJS = $(patsubst %.cpp,%.o,$(SRCS))
 PROG = osEXE
@@ -26,12 +26,11 @@ clean:
 cleanall:
 	rm -f $(OBJS) $(PROG) 
 
-$(PROG): $(OBJS)
+$(PROG): $(OBJS) 
 	$(CXX) -o $(PROG) $(OBJS) 
 
 .cpp:
 	$(CXX) -c $@.cpp  $(CXXFLAGS)
-
 
 
 

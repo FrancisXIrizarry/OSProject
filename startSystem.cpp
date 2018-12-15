@@ -74,7 +74,7 @@ void startSystem::startOS() {
     }
 }
 
-void startSystem::checkInput(string inputStr, priority_queue < pair < int, int > , vector < pair < int, int >> , CompareDist > & readyQ) //fix
+void startSystem::checkInput(string inputStr, priority_queue < pair < int, int > , vector < pair < int, int > > , CompareDist > & readyQ) //fix
 {
 
     if (inputStr.at(0) == 'A') {
@@ -227,7 +227,7 @@ void startSystem::checkInput(string inputStr, priority_queue < pair < int, int >
     }
 }
 
-void startSystem::displayReadyQ(priority_queue < pair < int, int > , vector < pair < int, int >> , CompareDist > readyQCopy) {
+void startSystem::displayReadyQ(priority_queue < pair < int, int > , vector < pair < int, int > > , CompareDist > readyQCopy) {
     while (!readyQCopy.empty()) {
         cout << "ID:" << readyQCopy.top().first << " P:" << readyQCopy.top().second << endl;
         readyQCopy.pop();
