@@ -64,7 +64,7 @@ class startSystem {
         startSystem() {}
     void preemptiveCheck();
     void startOS();
-    void checkInput(string inputStr, priority_queue < pair < int, int > , vector < pair < int, int >> , CompareDist > & readyQ);
+    void checkInput(string inputStr, priority_queue < pair < int, int > , vector < pair < int, int > > , CompareDist > & readyQ);
     void addToCPU(ProcessCB cpuP) {
         cpu.setProcess(cpuP);
     }
@@ -74,7 +74,7 @@ class startSystem {
     bool isDigit(char c) {
         return ('0' <= c && c <= '9');
     }
-    void displayReadyQ(priority_queue < pair < int, int > , vector < pair < int, int >> , CompareDist > );
+    void displayReadyQ(priority_queue < pair < int, int > , vector < pair < int, int > > , CompareDist > );
     void funcSR();
     void funcSI();
     void funcSM();
@@ -235,7 +235,7 @@ class startSystem {
     private:
         long int ramSize;
     short int hardDisks;
-    priority_queue < pair < int, int > , vector < pair < int, int >> , CompareDist > readyQueue;
+    priority_queue < pair < int, int > , vector < pair < int, int > > , CompareDist > readyQueue;
     vector < hardDisk > hardDrives;
     CPU cpu;
     map < int, ProcessCB > processTable;
