@@ -36,7 +36,7 @@ class hardDisk {
         return pFile;
     }
     void getIOQ() {
-        queue < pair < int, string >> copyOfQueue = InputOutput_Q;
+        queue < pair < int, string > > copyOfQueue = InputOutput_Q;
         if ((getHDDP() == 0 && getFile() == "") || noCompetition) {
             cerr << "Nothing in hard disk drive nor in queue" << endl;
         } else {
@@ -82,6 +82,6 @@ class hardDisk {
     bool lastP = false;
     int hardDriveP; //Swap pair of ProcessCB String to int string. We only need to keep track of processID which we can call processTable
     bool processINHDD;
-    queue < pair < int, string >> InputOutput_Q;
+    queue < pair < int, string > > InputOutput_Q;
 };
 #endif
